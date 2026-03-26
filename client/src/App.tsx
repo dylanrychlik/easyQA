@@ -44,7 +44,7 @@ import type {
   RunStatus as TestRunStatus,
 } from "./types";
 
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api";
+const API_BASE = import.meta.env.VITE_API_URL ?? "/api";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {

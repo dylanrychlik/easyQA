@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import path from "node:path";
 import { z } from "zod";
 import { store } from "./store";
 import type {
@@ -333,6 +334,12 @@ app.put("/api/test-runs/:testRunId/results/:resultId", (req, res) => {
     return res.status(404).json({ error: "Run result not found" });
   }
   res.json(updated);
+});
+
+const clientDistPath = path.resolve(process.cwd(), "../client/dist");
+app.use(express.static(clientDistPath));
+app.get(/^\/(?!api).*/, (_req, res) => {
+  res.sendFile(path.join(clientDistPath, "index.html"));
 });
 
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
