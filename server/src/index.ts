@@ -171,6 +171,15 @@ app.get("/api/projects/:projectId", (req, res) => {
   res.json({ ...details, runResults });
 });
 
+// Backward-compatible alias used by existing frontend clients.
+app.get("/api/projects/:projectId/details", (req, res) => {
+  const projectId = parseId(req.params.projectId);
+  const details = store.getProjectDetails(projectId);
+  if (!details) return res.status(404).json({ error: "Project not found" });
+  const runResults = details.testRuns.flatMap((run: { id: number }) => store.getRunResults(run.id));
+  res.json({ ...details, runResults });
+});
+
 app.post("/api/projects", (req, res) => {
   const payload = projectCreateSchema.parse(req.body);
   res.status(201).json(store.createProject(payload));
